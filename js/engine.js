@@ -127,7 +127,7 @@ var Engine = (function(global) {
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
-         // to create a white background at top of canvas for game info
+        // to create a white background at top of canvas for game info
         ctx.fillStyle = '#fff';
         ctx.fillRect(0, 0, 505, 606);
         var rowImages = [
@@ -168,7 +168,7 @@ var Engine = (function(global) {
             ctx.fillText('Score: ' + player.scoreTotal, 10, 30);
             // lives to play info
             ctx.fillText('Lives to Play: ' + player.lives, 170, 30);
-            if (player.timeLeft <6) {
+            if (player.timeLeft < 6) {
                 //uses red font color to give warning on "timeLeft"
                 ctx.fillStyle = '#ff0000';
             }

@@ -36,7 +36,7 @@ Enemy.prototype.update = function(dt) {
 
     //Collision detection between enemy & player
     /*check to see if enemy is on row with enemy (y value) & if horizontal X values overlap (x position + width calc
-    */
+     */
     if (player.death === false && this.y === player.y && this.x + this.width > player.x && this.x < player.x + player.width) {
         //if so run "deathFunction"
         player.deathFunction();
@@ -73,34 +73,28 @@ Star.prototype.update = function() {
     if ((Date.now() - player.bonusTime) > 8000) {
         player.bonusTime = Date.now();
     } else if (Date.now() - player.bonusTime < 5000) {
-        /* "bonus===true" means bonus has been collected,
-        and keeps the "bonus star" off screen for 5 sec after player collects it */
+        /* keeps the "bonus star" off screen for 5 sec after bonusTime reset */
         this.x = -101;
     } else {
         //places bonus star in front of the "holder" enemy, if it's been more than 5 secs since it disappeared
         this.x = this.holder.x + this.holder.width;
         this.y = this.holder.y;
-        if (player.death === false && this.y === player.y && this.x + this.width > player.x
-            && this.x < player.x + player.width) {
-            /*if bonus star overlaps with player, reset bonusTime, award extra life,
-            and set player.bonus toggel to "true"*/
+        if (player.death === false && this.y === player.y && this.x + this.width > player.x && this.x < player.x + player.width) {
+            /*if bonus star overlaps with player, reset bonusTime, award extra life*/
             player.bonusTime = Date.now();
             player.lives += 1;
-
         }
     }
 };
 
 Star.prototype.render = function() {
-    /* CROP SOURCE IMAGE TO INCLUDE ONLY VISIBLE OBJECT, THEN DRAW ONTO CANVAS
-     */
+    /* CROP SOURCE IMAGE TO INCLUDE ONLY VISIBLE OBJECT, THEN DRAW ONTO CANVAS */
     ctx.drawImage(Resources.get(this.sprite), 0, 50, this.width, 101, this.x, this.y, this.width, this.height);
 };
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-
 /* Player function sets image and start position for Player objects
  */
 var Player = function() {
@@ -122,21 +116,21 @@ var Player = function() {
     this.deathTime = 0;
     this.score = false;
     //info for scoring sequence
-    this.scoreTime = Date.now();//+15000;
+    this.scoreTime = Date.now(); //+15000;
     this.scoreTotal = 0;
     //counter for player lives
     this.lives = 3;
     //info for bonus sequence
     this.bonusTime = Date.now();
     //counter for player clock
-    this.timeLeft = Math.round((15-(Date.now() - this.scoreTime)/1000));
+    this.timeLeft = Math.round((15 - (Date.now() - this.scoreTime) / 1000));
 };
 
 Player.prototype.update = function() {
     //update time remaining to score
-    this.timeLeft = Math.round((15-(Date.now() - this.scoreTime)/1000))
+    this.timeLeft = Math.round((15 - (Date.now() - this.scoreTime) / 1000));
     // player is dead if time left gets down to zero
-    if(this.timeLeft <= 0) {
+    if (this.timeLeft <= 0) {
         this.deathFunction();
     }
     //after player scores & .score === true...
@@ -254,10 +248,10 @@ Player.prototype.deathFunction = function() {
     this.deathTime = Date.now();
     this.lives += -1;
     this.scoreTime = Date.now();
-}
+};
 
 //keeps player frozen in place by clearing moveX & Y; allows for "flicker" display of player after death or scoring
-Player.prototype.freezeMove = function () {
+Player.prototype.freezeMove = function() {
     this.moveX = 0;
     this.moveY = 0;
 };
@@ -277,7 +271,7 @@ allEnemies.enemyNumber = 4;
 for (i = 0; i < allEnemies.enemyNumber; i++) {
     var enemyInstance = new Enemy();
     allEnemies.push(enemyInstance);
-};
+}
 
 // Place the player object in a variable called player
 // create variable to hold x & y adjustments made when player uses direction buttons
