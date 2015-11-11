@@ -4,11 +4,12 @@ A "Frogger"-like game that requires a player to advance across a hazardous roadw
 
 TO PLAY:
 1. Download the game files via GitHub at https://github.com/RxBx/frontend-nanodegree-arcade-game
+
 2. Open the file "index.html" in your browser... The game starts immediately.
 
 HOW TO PLAY:
-- Use arrow buttons to move the player up, down, left, right.
 - You have 3 lives at the beginning of the game.
+- Use arrow buttons to move the player up, down, left, right.
 - You have 15 seconds to move the player to the water at top of screen, or you lose your life. Reaching the water awards you 10 points.
 - Avoid the enemy insects crossing the screen on the stone/street rows; if they hit the player, you lose your life.
 - A "Bonus Star" appears every 5 seconds, and stays on screen for about 3 seconds. If you move the player onto the Bonus Star, you are awarded an extra player life.

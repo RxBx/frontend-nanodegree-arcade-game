@@ -33,7 +33,7 @@ var Engine = (function(global) {
 
     doc.body.appendChild(canvas);
     //font for info at top of canvas
-    ctx.font = "20px serif";
+    ctx.font = '20px serif';
 
 
     /* This function serves as the kickoff point for the game loop itself
@@ -165,18 +165,18 @@ var Engine = (function(global) {
         //Writes game info on top of canvas
         if (player.lives > 0) {
             //score info
-            ctx.fillText("Score: " + player.scoreTotal, 10, 30);
+            ctx.fillText('Score: ' + player.scoreTotal, 10, 30);
             // lives to play info
-            ctx.fillText("Lives to Play: " + player.lives, 170, 30);
+            ctx.fillText('Lives to Play: ' + player.lives, 170, 30);
             if (player.timeLeft <6) {
                 //uses red font color to give warning on "timeLeft"
                 ctx.fillStyle = '#ff0000';
             }
-            ctx.fillText("Time to Score: " + player.timeLeft, 350, 30);
+            ctx.fillText('Time to Score: ' + player.timeLeft, 350, 30);
         } else {
             //Game Over message when playerlives reach 0
-            ctx.fillText("Final Score: " + player.scoreTotal, 10, 30);
-            ctx.fillText("GAME OVER!", 200, 30);
+            ctx.fillText('Final Score: ' + player.scoreTotal, 10, 30);
+            ctx.fillText('GAME OVER!', 200, 30);
         }
 
     }

@@ -89,7 +89,7 @@ Star.prototype.update = function() {
 
         }
     }
-}
+};
 
 Star.prototype.render = function() {
     /* CROP SOURCE IMAGE TO INCLUDE ONLY VISIBLE OBJECT, THEN DRAW ONTO CANVAS
@@ -130,7 +130,7 @@ var Player = function() {
     this.bonusTime = Date.now();
     //counter for player clock
     this.timeLeft = Math.round((15-(Date.now() - this.scoreTime)/1000));
-}
+};
 
 Player.prototype.update = function() {
     //update time remaining to score
@@ -202,7 +202,7 @@ Player.prototype.update = function() {
         this.score = true;
         this.scoreTotal += 10;
     }
-}
+};
 
 Player.prototype.render = function() {
     /* drawImage items crop source image */
@@ -246,7 +246,7 @@ Player.prototype.reset = function() {
     this.y = gameBoard.rowStartY + 5 * gameBoard.rowHeightY;
     this.score = false;
     this.death = false;
-}
+};
 
 //changes player info to indicate death has occurred and subtracts 1 life; resets score timer
 Player.prototype.deathFunction = function() {
@@ -260,7 +260,7 @@ Player.prototype.deathFunction = function() {
 Player.prototype.freezeMove = function () {
     this.moveX = 0;
     this.moveY = 0;
-}
+};
 
 // Now instantiate your objects.
 // gameBoard holds values useful in calculating uniform positions/collisions of Player, Star, Enemy
@@ -277,7 +277,7 @@ allEnemies.enemyNumber = 4;
 for (i = 0; i < allEnemies.enemyNumber; i++) {
     var enemyInstance = new Enemy();
     allEnemies.push(enemyInstance);
-}
+};
 
 // Place the player object in a variable called player
 // create variable to hold x & y adjustments made when player uses direction buttons
