@@ -21,13 +21,20 @@ var Engine = (function(global) {
      */
     var doc = global.document,
         win = global.window,
+
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
+        //startTime as reference point for creating extra Enemies
+        startTime,
         lastTime;
 
     canvas.width = 505;
     canvas.height = 606;
+
     doc.body.appendChild(canvas);
+    //font for info at top of canvas
+    ctx.font = "20px serif";
+
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -41,6 +48,8 @@ var Engine = (function(global) {
          */
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
+
+
 
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
@@ -66,6 +75,8 @@ var Engine = (function(global) {
     function init() {
         reset();
         lastTime = Date.now();
+        //set startTime to as reference for creating extra Enemies
+        startTime = Date.now();
         main();
     }
 
@@ -81,6 +92,13 @@ var Engine = (function(global) {
     function update(dt) {
         updateEntities(dt);
         // checkCollisions();
+        //this calc starts creating new Enemies after first 20 secs; stops at 8 total enemies
+        if ((Math.round(Date.now() - startTime) / 5000) > allEnemies.length) {
+            if (allEnemies.length < 8) {
+                var enemyInstance = new Enemy();
+                allEnemies.push(enemyInstance);
+            }
+        }
     }
 
     /* This is called by the update function  and loops through all of the
@@ -94,6 +112,8 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+        //updates bonus star
+        star.update();
         player.update();
     }
 
@@ -107,13 +127,16 @@ var Engine = (function(global) {
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
+         // to create a white background at top of canvas for game info
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, 505, 606);
         var rowImages = [
-                'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
-                'images/grass-block.png'    // Row 2 of 2 of grass
+                'images/water-block.png', // Top row is water
+                'images/stone-block.png', // Row 1 of 3 of stone
+                'images/stone-block.png', // Row 2 of 3 of stone
+                'images/stone-block.png', // Row 3 of 3 of stone
+                'images/grass-block.png', // Row 1 of 2 of grass
+                'images/grass-block.png' // Row 2 of 2 of grass
             ],
             numRows = 6,
             numCols = 5,
@@ -138,6 +161,24 @@ var Engine = (function(global) {
 
 
         renderEntities();
+        ctx.fillStyle = '#000';
+        //Writes game info on top of canvas
+        if (player.lives > 0) {
+            //score info
+            ctx.fillText("Score: " + player.scoreTotal, 10, 30);
+            // lives to play info
+            ctx.fillText("Lives to Play: " + player.lives, 170, 30);
+            if (player.timeLeft <6) {
+                //uses red font color to give warning on "timeLeft"
+                ctx.fillStyle = '#ff0000';
+            }
+            ctx.fillText("Time to Score: " + player.timeLeft, 350, 30);
+        } else {
+            //Game Over message when playerlives reach 0
+            ctx.fillText("Final Score: " + player.scoreTotal, 10, 30);
+            ctx.fillText("GAME OVER!", 200, 30);
+        }
+
     }
 
     /* This function is called by the render function and is called on each game
@@ -151,7 +192,8 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
+        //render bonus star
+        star.render();
         player.render();
     }
 
@@ -172,7 +214,11 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        //added some variations on char-boy for scoring and death renders
+        'images/char-boy-red.png',
+        'images/char-boy-inverse.png',
+        'images/Star.png'
     ]);
     Resources.onReady(init);
 
@@ -181,4 +227,5 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
+
 })(this);
