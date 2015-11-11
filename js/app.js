@@ -70,26 +70,23 @@ Star.prototype.constructor = Star;
 //timer methods for "bonus star"
 Star.prototype.update = function() {
     //if no "bonus star" has appeared for 8 sec, then make it appear
-    if (player.bonus === false && (Date.now() - player.bonusTime) > 8000) {
-        //sets the "bonus" toggle to true
-        player.bonus = true;
+    if ((Date.now() - player.bonusTime) > 8000) {
         player.bonusTime = Date.now();
-    } else if (player.bonus === true && Date.now() - player.bonusTime < 5000) {
+    } else if (Date.now() - player.bonusTime < 5000) {
         /* "bonus===true" means bonus has been collected,
         and keeps the "bonus star" off screen for 5 sec after player collects it */
         this.x = -101;
-    } else if (player.bonus === true && Date.now() - player.bonusTime > 5000) {
-        //resets bonus to "false" after 5 secs to allow new bonus to appear
-        player.bonus = false;
-    } else if (player.bonus === false) {
+    } else {
         //places bonus star in front of the "holder" enemy, if it's been more than 5 secs since it disappeared
         this.x = this.holder.x + this.holder.width;
         this.y = this.holder.y;
-        if (this.y === player.y && this.x + this.width > player.x && this.x < player.x + player.width) {
-            //if bonus star overlaps with player, reset bonusTime, award extra life, and set player.bonus toggel to "true"
+        if (player.death === false && this.y === player.y && this.x + this.width > player.x
+            && this.x < player.x + player.width) {
+            /*if bonus star overlaps with player, reset bonusTime, award extra life,
+            and set player.bonus toggel to "true"*/
             player.bonusTime = Date.now();
             player.lives += 1;
-            player.bonus = true;
+
         }
     }
 }
@@ -103,7 +100,6 @@ Star.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-
 
 /* Player function sets image and start position for Player objects
  */
@@ -131,23 +127,12 @@ var Player = function() {
     //counter for player lives
     this.lives = 3;
     //info for bonus sequence
-    this.bonus = true;
     this.bonusTime = Date.now();
     //counter for player clock
     this.timeLeft = Math.round((15-(Date.now() - this.scoreTime)/1000));
 }
 
 Player.prototype.update = function() {
-    //if (player.death === true && Date.now - player.deathTime >2000)
-    /* Change character position by adding adjustX & Y (created by ".handleInput")
-    to current this.x and this.y. Then reset adjustX & Y after use */
-    //if (Date.now - player.deathTime > 2000) {
-    //SCORING: Update players after SCORING (crossing to river)
-    //Leaves scoring player ("score: true:) in winning position for 2 secs after scoring
-    /*if (this.lives > 0) {
-        this.timeLeft = Math.round((15-(Date.now() - this.scoreTime)/1000))
-    }*/
-
     //update time remaining to score
     this.timeLeft = Math.round((15-(Date.now() - this.scoreTime)/1000))
     // player is dead if time left gets down to zero
