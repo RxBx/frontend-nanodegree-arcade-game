@@ -1,10 +1,6 @@
 // Enemies our player must avoid
 var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
 
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 
     /* SET EACH ENEMY'S START LOCATION & SPEED BASED ON ORDER OF CREATION "i" IN "allEnemies" ARRAY
@@ -19,15 +15,12 @@ var Enemy = function() {
     this.speed = 225 + 17.5 * Math.ceil(Math.random() * 10);
 };
 
-// Update the enemy's position, required method for game
+// Update the enemy's position, and monitor for collisions
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-    // SIMPLE POSITION CHANGE IN X VALUE BASED ON TIME CHANGE AND SPEED;
+    // Simple position change in X value based on time change & speed
     this.x = this.x + this.speed * dt;
-    //RE-POSITION ENEMY THAT HAS MOVED OFF SCREEN RIGHT TO RETURN SCREEN LEFT & RESET SPEED & ROW RANDOWMLY
+    //reposition enemy that has moved off screen right to return screen left & reset speed & row randomly
     if (this.x > 505) {
         this.x = -this.width * 2;
         this.y = gameBoard.rowStartY + Math.ceil(Math.random() * 3) * gameBoard.rowHeightY;
@@ -35,26 +28,26 @@ Enemy.prototype.update = function(dt) {
     }
 
     //Collision detection between enemy & player
-    /*check to see if enemy is on row with enemy (y value) & if horizontal X values overlap (x position + width calc
-     */
+    /*check to see if enemy is on row with enemy (y value) & if horizontal X values
+    overlap (x position + width calc */
     if (player.death === false && this.y === player.y && this.x + this.width > player.x && this.x < player.x + player.width) {
         //if so run "deathFunction"
         player.deathFunction();
     }
 };
 
-// Draw the enemy on the screen, required method for game
+// Function to draw the enemy on the screen
 Enemy.prototype.render = function() {
-    /* CROP SOURCE IMAGE TO INCLUDE ONLY VISIBLE OBJECT, THEN DRAW ONTO CANVAS
+    /* Crop source image to include only visible object, then draw onto canvas
      */
     ctx.drawImage(Resources.get(this.sprite), 0, 74, this.width, this.height, this.x, this.y, this.width, this.height);
 };
 
-/* create Star "class" based on Enemy "prototype" using method described in "OO JS" course*/
+/* create new Star "class" based on Enemy "prototype" */
 var Star = function() {
     Enemy.call(this);
     //then add specific details unique to the Star class
-    // "holder" is a randomly chosen "Enemy" that the "bonus star" will appear in front of; appears "pushed" by it;
+    // The Star's "holder" is a randomly chosen "Enemy" that the "bonus star" will appear in front of & appear "pushed" by;
     this.holder = allEnemies[Math.floor(Math.random() * allEnemies.length)];
     this.sprite = 'images/Star.png';
     //"bonus star" is positioned in front of the "holder"
@@ -67,7 +60,7 @@ var Star = function() {
 Star.prototype = Object.create(Enemy.prototype);
 // links Star as the constructor of Star
 Star.prototype.constructor = Star;
-//timer methods for "bonus star"
+//timer methods for "bonus star" appearance / disappearance
 Star.prototype.update = function() {
     //if no "bonus star" has appeared for 8 sec, then make it appear
     if ((Date.now() - player.bonusTime) > 8000) {
@@ -79,8 +72,8 @@ Star.prototype.update = function() {
         //places bonus star in front of the "holder" enemy, if it's been more than 5 secs since it disappeared
         this.x = this.holder.x + this.holder.width;
         this.y = this.holder.y;
+        /*if bonus star overlaps with player, reset bonusTime, award extra life*/
         if (player.death === false && this.y === player.y && this.x + this.width > player.x && this.x < player.x + player.width) {
-            /*if bonus star overlaps with player, reset bonusTime, award extra life*/
             player.bonusTime = Date.now();
             player.lives += 1;
         }
@@ -88,13 +81,10 @@ Star.prototype.update = function() {
 };
 
 Star.prototype.render = function() {
-    /* CROP SOURCE IMAGE TO INCLUDE ONLY VISIBLE OBJECT, THEN DRAW ONTO CANVAS */
+    /* Crop source image to include only visible object, then draw onto canvas */
     ctx.drawImage(Resources.get(this.sprite), 0, 50, this.width, 101, this.x, this.y, this.width, this.height);
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
 /* Player function sets image and start position for Player objects
  */
 var Player = function() {
@@ -122,10 +112,10 @@ var Player = function() {
     this.lives = 3;
     //info for bonus sequence
     this.bonusTime = Date.now();
-    //counter for player clock
+    //counter for player clock display
     this.timeLeft = Math.round((15 - (Date.now() - this.scoreTime) / 1000));
 };
-
+// Logic for calculating state of play for player
 Player.prototype.update = function() {
     //update time remaining to score
     this.timeLeft = Math.round((15 - (Date.now() - this.scoreTime) / 1000));
@@ -133,7 +123,7 @@ Player.prototype.update = function() {
     if (this.timeLeft <= 0) {
         this.deathFunction();
     }
-    //after player scores & .score === true...
+    //after player SCORES & therefore .score === true...
     if (this.score === true) {
         if (Date.now() - this.scoreTime < 2000) {
             //prevent movement for 2 secs
@@ -197,10 +187,10 @@ Player.prototype.update = function() {
         this.scoreTotal += 10;
     }
 };
-
+//method to render game character after update calcs
 Player.prototype.render = function() {
     /* drawImage items crop source image */
-    // Death image render uses modulo to flicker between normal and dead sprite to indicate death
+    // Death image render uses "modulo" formula to flicker between normal and dead sprite to indicate death
     if (this.death === true) {
         if (Math.floor((Date.now() - this.deathTime) / 100) % 2 > 0) {
             ctx.drawImage(Resources.get(this.deadSprite), 18, 60, this.width, this.height, this.x, this.y, this.width, this.height);
@@ -208,7 +198,7 @@ Player.prototype.render = function() {
             ctx.drawImage(Resources.get(this.sprite), 18, 60, this.width, this.height, this.x, this.y, this.width, this.height);
         }
     } else if (this.score === true) {
-        // Scoring image render uses modulo to flicker between normal and score sprite to indicate score victory
+        // Scoring image render uses modulo formula to flicker between normal and score sprite to indicate score victory
         if (Math.floor((Date.now() - this.scoreTime) / 100) % 2 > 0) {
             ctx.drawImage(Resources.get(this.scoreSprite), 18, 60, this.width, this.height, this.x, this.y, this.width, this.height);
         } else {
@@ -250,13 +240,12 @@ Player.prototype.deathFunction = function() {
     this.scoreTime = Date.now();
 };
 
-//keeps player frozen in place by clearing moveX & Y; allows for "flicker" display of player after death or scoring
+//keeps player frozen in place by clearing moveX & Y; allows for "flicker" display of static player after death or scoring
 Player.prototype.freezeMove = function() {
     this.moveX = 0;
     this.moveY = 0;
 };
 
-// Now instantiate your objects.
 // gameBoard holds values useful in calculating uniform positions/collisions of Player, Star, Enemy
 var gameBoard = {
     columnStartX: 18,
@@ -264,7 +253,7 @@ var gameBoard = {
     columnWidthX: 101,
     rowHeightY: 83
 };
-// Place all enemy objects in an array called allEnemies
+// Places all enemy objects in an array called allEnemies
 //iterates 4 enemies as objects in the allEnemies array, addressable by index number
 var allEnemies = [];
 allEnemies.enemyNumber = 4;
@@ -273,16 +262,14 @@ for (i = 0; i < allEnemies.enemyNumber; i++) {
     allEnemies.push(enemyInstance);
 }
 
-// Place the player object in a variable called player
-// create variable to hold x & y adjustments made when player uses direction buttons
 // Instantiate a player via Player prototype
 var player = new Player();
+
 // create the bonus star
 var star = new Star();
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-// modified 'keyup' to 'keydown' since this is better for game play
+// This listens for key presses and sends the keys to
+// player.handleInput() method.
 document.addEventListener('keydown', function(e) {
     var allowedKeys = {
         37: 'left',
